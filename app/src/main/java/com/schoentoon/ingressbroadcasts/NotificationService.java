@@ -13,9 +13,6 @@ public class NotificationService extends NotificationListenerService {
     public void onNotificationPosted(StatusBarNotification sbn) {
         if (!INGRESS_PACKAGE.equals(sbn.getPackageName())) return;
 
-        android.util.Log.d("test", "onNotificationPosted()");
-        android.util.Log.d("notification", "str " + sbn);
-
         final Bundle extras = sbn.getNotification().extras;
 
         final String title = extras.getString(Notification.EXTRA_TITLE);
@@ -37,12 +34,6 @@ public class NotificationService extends NotificationListenerService {
                     sendBroadcast(broadcast);
                 }
             }
-        }
-        android.util.Log.d("extraTitle", extras.getString("android.title", "null"));
-
-        for (String key : extras.keySet()) {
-            Object obj = extras.get(key);
-            android.util.Log.d("extras", "Key = " + key + " = " + (obj == null ? "null" : obj.toString()));
         }
     }
 
