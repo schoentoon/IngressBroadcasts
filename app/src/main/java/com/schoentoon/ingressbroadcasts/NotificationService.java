@@ -18,7 +18,7 @@ public class NotificationService extends NotificationListenerService {
         final String title = extras.getString(Notification.EXTRA_TITLE);
 
         if (title.endsWith("under attack")) {
-            CharSequence[] lines = extras.getCharSequenceArray("android.textLines");
+            CharSequence[] lines = extras.getCharSequenceArray(Notification.EXTRA_TEXT_LINES);
             if (lines != null) {
                 for (CharSequence str : lines) {
                     final String line = str.toString();
