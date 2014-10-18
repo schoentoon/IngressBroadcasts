@@ -13,12 +13,15 @@ public class NotificationService extends NotificationListenerService {
     private static final String UNDER_ATTACK = "under attack";
     private static final String USER = "user";
     private static final String PORTAL = "portal";
+    private static final String WHEN = "when";
 
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
         if (!INGRESS_PACKAGE.equals(sbn.getPackageName())) return;
 
-        final Bundle extras = sbn.getNotification().extras;
+        final Notification notification = sbn.getNotification();
+
+        final Bundle extras = notification.extras;
 
         final String title = extras.getString(Notification.EXTRA_TITLE);
 
@@ -36,6 +39,7 @@ public class NotificationService extends NotificationListenerService {
                     final Intent broadcast = new Intent(ATTACK_INTENT);
                     broadcast.putExtra(USER, user);
                     broadcast.putExtra(PORTAL, portal);
+                    broadcast.putExtra(WHEN, notification.when);
                     sendBroadcast(broadcast);
                 }
             }
