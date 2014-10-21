@@ -58,6 +58,14 @@ public class NotificationService extends NotificationListenerService {
 
             return true;
         }
+
+        @Override
+        public String toString() {
+            return "Attack{" +
+                    "user='" + user + '\'' +
+                    ", portal='" + portal + '\'' +
+                    '}';
+        }
     }
 
     @Override
@@ -73,7 +81,9 @@ public class NotificationService extends NotificationListenerService {
         if (title.endsWith(UNDER_ATTACK)) {
             final CharSequence[] lines = extras.getCharSequenceArray(Notification.EXTRA_TEXT_LINES);
             if (lines != null) {
+                boolean done = false;
                 for (final CharSequence str : lines) {
+                    if (done) break;
                     try {
                         final Attack attack = new Attack(str.toString());
 
@@ -89,11 +99,16 @@ public class NotificationService extends NotificationListenerService {
                                     iter.next();
                                     iter.remove();
                                 }
-                                return;
+                                done = true;
+                                continue;
                             }
                         }
+                        queue.add(attack);
 
-                        attack.broadcast(this, notification.when);
+                        if (!done) {
+                            attack.broadcast(this, notification.when);
+                            android.util.Log.d("attack", notification.when + " - " + attack.toString());
+                        }
                     } catch (final Exception ignore) {
                     }
                 }
