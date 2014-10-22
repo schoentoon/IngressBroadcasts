@@ -81,9 +81,23 @@ public class NotificationService extends NotificationListenerService {
         if (title.endsWith(UNDER_ATTACK)) {
             final CharSequence[] lines = extras.getCharSequenceArray(Notification.EXTRA_TEXT_LINES);
             if (lines != null) {
+                android.util.Log.d("attack", "========================= " + lines.length);
+                try {
+                    Iterator<Attack> deleter = queue.iterator();
+                    for (int i = 0; i < lines.length; ++i) {
+                        deleter.next();
+                    }
+                    while (deleter.hasNext()) {
+                        deleter.remove();
+                        deleter.next();
+                    }
+                } catch (final Exception ignore) {
+                }
+
                 boolean done = false;
                 for (final CharSequence str : lines) {
                     if (done) break;
+
                     try {
                         final Attack attack = new Attack(str.toString());
 
@@ -93,19 +107,13 @@ public class NotificationService extends NotificationListenerService {
                         while (iter.hasNext()) {
                             final Attack atk = iter.next();
                             if (attack.equals(atk)) {
-                                // leave atk in tact
-                                iter.next();
-                                while (iter.hasNext()) {
-                                    iter.next();
-                                    iter.remove();
-                                }
                                 done = true;
-                                continue;
+                                break;
                             }
                         }
-                        queue.add(attack);
 
                         if (!done) {
+                            queue.add(attack);
                             attack.broadcast(this, notification.when);
                             android.util.Log.d("attack", notification.when + " - " + attack.toString());
                         }
