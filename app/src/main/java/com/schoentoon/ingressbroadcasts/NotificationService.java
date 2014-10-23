@@ -81,7 +81,6 @@ public class NotificationService extends NotificationListenerService {
         if (title.endsWith(UNDER_ATTACK)) {
             final CharSequence[] lines = extras.getCharSequenceArray(Notification.EXTRA_TEXT_LINES);
             if (lines != null) {
-                android.util.Log.d("attack", "========================= " + lines.length);
                 try {
                     Iterator<Attack> deleter = queue.iterator();
                     for (int i = 0; i < lines.length; ++i) {
@@ -94,29 +93,15 @@ public class NotificationService extends NotificationListenerService {
                 } catch (final Exception ignore) {
                 }
 
-                boolean done = false;
                 for (final CharSequence str : lines) {
-                    if (done) break;
-
                     try {
                         final Attack attack = new Attack(str.toString());
 
-                        // if we actually have attack already we delete it and everything after it
-                        // and then we jump out
-                        Iterator<Attack> iter = queue.iterator();
-                        while (iter.hasNext()) {
-                            final Attack atk = iter.next();
-                            if (attack.equals(atk)) {
-                                done = true;
-                                break;
-                            }
-                        }
+                        // if we actually have attack already we jump out
+                        if (queue.contains(attack)) break;
 
-                        if (!done) {
-                            queue.add(attack);
-                            attack.broadcast(this, notification.when);
-                            android.util.Log.d("attack", notification.when + " - " + attack.toString());
-                        }
+                        queue.add(attack);
+                        attack.broadcast(this, notification.when);
                     } catch (final Exception ignore) {
                     }
                 }
