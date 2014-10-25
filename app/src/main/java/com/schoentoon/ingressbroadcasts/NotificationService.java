@@ -102,7 +102,7 @@ public class NotificationService extends NotificationListenerService {
 
                         queue.add(attack);
                         attack.broadcast(this, notification.when);
-                        android.util.Log.d(ATTACK_INTENT, notification.when + " - " + attack.toString());
+                        if (BuildConfig.DEBUG) android.util.Log.d(ATTACK_INTENT, notification.when + " - " + attack.toString());
                     } catch (final Exception ignore) {
                     }
                 }
