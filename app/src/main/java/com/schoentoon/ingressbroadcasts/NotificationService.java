@@ -69,8 +69,10 @@ public class NotificationService extends NotificationListenerService {
     }
 
     @Override
-    public void onNotificationPosted(StatusBarNotification sbn) {
+    public void onNotificationPosted(final StatusBarNotification sbn) {
         if (!INGRESS_PACKAGE.equals(sbn.getPackageName())) return;
+
+        debugNotification(sbn);
 
         final Notification notification = sbn.getNotification();
 
@@ -110,7 +112,14 @@ public class NotificationService extends NotificationListenerService {
         }
     }
 
+    void debugNotification(final StatusBarNotification sbn) {
+        android.util.Log.d(sbn.getClass().getSimpleName(), sbn.toString());
+
+        final Bundle bundle = sbn.getNotification().extras;
+        for (final String key : bundle.keySet()) android.util.Log.d(sbn.getClass().getSimpleName(), "Key = " + key + " = " + bundle.get(key).toString());
+    }
+
     @Override
-    public void onNotificationRemoved(StatusBarNotification sbn) {
+    public void onNotificationRemoved(final StatusBarNotification sbn) {
     }
 }
