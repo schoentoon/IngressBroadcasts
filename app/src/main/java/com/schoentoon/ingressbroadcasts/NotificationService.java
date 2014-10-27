@@ -116,7 +116,10 @@ public class NotificationService extends NotificationListenerService {
         android.util.Log.d(sbn.getClass().getSimpleName(), sbn.toString());
 
         final Bundle bundle = sbn.getNotification().extras;
-        for (final String key : bundle.keySet()) android.util.Log.d(sbn.getClass().getSimpleName(), "Key = " + key + " = " + bundle.get(key).toString());
+
+        if (bundle != null) {
+            for (final String key : bundle.keySet()) android.util.Log.d(sbn.getClass().getSimpleName(), "Key = " + key + " = " + bundle.get(key).toString());
+        }
     }
 
     @Override
