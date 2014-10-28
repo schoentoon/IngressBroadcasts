@@ -15,7 +15,6 @@ public class NotificationService extends NotificationListenerService {
     private static final String INGRESS_PACKAGE = "com.nianticproject.ingress";
     private static final String ATTACK_INTENT = "com.schoentoon.ingressbroadcasts.ATTACK";
 
-    private static final String UNDER_ATTACK = "under attack";
     private static final String USER = "user";
     private static final String PORTAL = "portal";
     private static final String WHEN = "when";
@@ -80,7 +79,7 @@ public class NotificationService extends NotificationListenerService {
 
         final String title = extras.getString(Notification.EXTRA_TITLE);
 
-        if (title.endsWith(UNDER_ATTACK)) {
+        if (title.endsWith(getString(R.string.under_attack))) {
             final CharSequence[] lines = extras.getCharSequenceArray(Notification.EXTRA_TEXT_LINES);
             if (lines != null) {
                 try {
