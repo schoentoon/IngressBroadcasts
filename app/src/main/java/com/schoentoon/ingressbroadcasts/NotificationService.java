@@ -14,10 +14,12 @@ import java.util.Iterator;
 public class NotificationService extends NotificationListenerService {
     private static final String INGRESS_PACKAGE = "com.nianticproject.ingress";
     private static final String ATTACK_INTENT = "com.schoentoon.ingressbroadcasts.ATTACK";
+    private static final String ACHIEVEMENT_INTENT = "com.schoentoon.ingressbroadcasts.ACHIEVEMENT";
 
     private static final String USER = "user";
     private static final String PORTAL = "portal";
     private static final String WHEN = "when";
+    private static final String TYPE = "type";
 
     /**
      * Let's prevent duplicate broadcasts, size is 8 as Ingress will never group more than
@@ -108,6 +110,12 @@ public class NotificationService extends NotificationListenerService {
                     }
                 }
             }
+        } else if (getString(R.string.achievement).equals(title)) {
+            final String type = extras.getString(Notification.EXTRA_TEXT).substring(13);
+            final Intent intent = new Intent(ACHIEVEMENT_INTENT);
+            intent.putExtra(TYPE, type);
+            intent.putExtra(WHEN, notification.when);
+            sendBroadcast(intent);
         }
     }
 
@@ -117,7 +125,12 @@ public class NotificationService extends NotificationListenerService {
         final Bundle bundle = sbn.getNotification().extras;
 
         if (bundle != null) {
-            for (final String key : bundle.keySet()) android.util.Log.d(sbn.getClass().getSimpleName(), "Key = " + key + " = " + bundle.get(key).toString());
+            for (final String key : bundle.keySet())
+            {
+                final Object obj = bundle.get(key);
+                if (obj == null) android.util.Log.d(sbn.getClass().getSimpleName(), "Key = " + key + " = null");
+                else android.util.Log.d(sbn.getClass().getSimpleName(), "Key = " + key + " = " + bundle.get(key).toString());
+            }
         }
     }
 
