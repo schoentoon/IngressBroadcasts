@@ -20,6 +20,7 @@ public class NotificationService extends NotificationListenerService {
     private static final String PORTAL = "portal";
     private static final String WHEN = "when";
     private static final String TYPE = "type";
+    private static final String ICON = "icon";
 
     /**
      * Let's prevent duplicate broadcasts, size is 8 as Ingress will never group more than
@@ -115,6 +116,7 @@ public class NotificationService extends NotificationListenerService {
             final Intent intent = new Intent(ACHIEVEMENT_INTENT);
             intent.putExtra(TYPE, type);
             intent.putExtra(WHEN, notification.when);
+            intent.putExtra(ICON, intent.getParcelableExtra(Notification.EXTRA_LARGE_ICON));
             sendBroadcast(intent);
         }
     }
