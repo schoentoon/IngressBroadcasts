@@ -2,4 +2,5 @@
     <string name="app_name">IngressBroadcasts</string>
     <string name="under_attack">under attack</string>
     <string name="achievement">Achievement</string>
+    <string name="neutralized">neutralized</string>
 </resources>

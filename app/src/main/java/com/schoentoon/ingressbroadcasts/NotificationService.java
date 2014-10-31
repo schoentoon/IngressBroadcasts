@@ -15,6 +15,7 @@ public class NotificationService extends NotificationListenerService {
     private static final String INGRESS_PACKAGE = "com.nianticproject.ingress";
     private static final String ATTACK_INTENT = "com.schoentoon.ingressbroadcasts.ATTACK";
     private static final String ACHIEVEMENT_INTENT = "com.schoentoon.ingressbroadcasts.ACHIEVEMENT";
+    private static final String NEUTRALIZED_INTENT = "com.schoentoon.ingressbroadcasts.NEUTRALIZED_INTENT";
 
     private static final String USER = "user";
     private static final String PORTAL = "portal";
@@ -117,7 +118,22 @@ public class NotificationService extends NotificationListenerService {
             intent.putExtra(TYPE, type);
             intent.putExtra(WHEN, notification.when);
             intent.putExtra(ICON, intent.getParcelableExtra(Notification.EXTRA_LARGE_ICON));
+            android.util.Log.d(ACHIEVEMENT_INTENT, notification.when + " - " + type);
             sendBroadcast(intent);
+        } else if (title.endsWith(getString(R.string.neutralized))) {
+            final Intent intent = new Intent(NEUTRALIZED_INTENT);
+            final String raw = extras.getString(Notification.EXTRA_TEXT);
+
+            int space = raw.indexOf(' ');
+            if (space == -1) return;
+
+            final String user = raw.substring(0, space);
+            final String portal = raw.substring(space + 1);
+
+            intent.putExtra(USER, user);
+            intent.putExtra(PORTAL, portal);
+            intent.putExtra(WHEN, notification.when);
+            android.util.Log.d(NEUTRALIZED_INTENT, notification.when + " - " + user + " - " + portal);
         }
     }
 
