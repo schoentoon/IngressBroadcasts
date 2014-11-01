@@ -134,6 +134,7 @@ public class NotificationService extends NotificationListenerService {
             intent.putExtra(PORTAL, portal);
             intent.putExtra(WHEN, notification.when);
             android.util.Log.d(NEUTRALIZED_INTENT, notification.when + " - " + user + " - " + portal);
+            sendBroadcast(intent);
         }
     }
 
