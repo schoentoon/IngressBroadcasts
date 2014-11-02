@@ -107,7 +107,7 @@ public class NotificationService extends NotificationListenerService {
 
                         queue.add(attack);
                         attack.broadcast(this, notification.when);
-                        if (BuildConfig.DEBUG) android.util.Log.d(ATTACK_INTENT, notification.when + " - " + attack.toString());
+                        android.util.Log.d(ATTACK_INTENT, notification.when + " - " + attack.toString());
                     } catch (final Exception ignore) {
                     }
                 }
@@ -139,6 +139,8 @@ public class NotificationService extends NotificationListenerService {
     }
 
     void debugNotification(final StatusBarNotification sbn) {
+        if (!BuildConfig.DEBUG) return;
+
         android.util.Log.d(sbn.getClass().getSimpleName(), sbn.toString());
 
         final Bundle bundle = sbn.getNotification().extras;
