@@ -24,6 +24,12 @@ public class NotificationService extends NotificationListenerService {
     private static final String ICON = "icon";
 
     /**
+     *  You can set this to true if you want to cancel all the notifications, in case of
+     *  multiple attacks on 1 portal this is more reliable
+     */
+    private static final boolean CANCEL_NOTIFICATIONS = false;
+
+    /**
      * Let's prevent duplicate broadcasts, size is 8 as Ingress will never group more than
      * 8 attacks into a single notification.
      */
@@ -86,29 +92,41 @@ public class NotificationService extends NotificationListenerService {
         if (title.endsWith(getString(R.string.under_attack))) {
             final CharSequence[] lines = extras.getCharSequenceArray(Notification.EXTRA_TEXT_LINES);
             if (lines != null) {
-                try {
-                    Iterator<Attack> deleter = queue.iterator();
-                    for (int i = 0; i < lines.length; ++i) {
-                        deleter.next();
+                if (CANCEL_NOTIFICATIONS) {
+                    for (final CharSequence str : lines) {
+                        try {
+                            final Attack attack = new Attack(str.toString());
+                            attack.broadcast(this, notification.when);
+                            android.util.Log.d(ATTACK_INTENT, notification.when + " - " + attack.toString());
+                        } catch (final Exception ignore) {
+                        }
                     }
-                    while (deleter.hasNext()) {
-                        deleter.remove();
-                        deleter.next();
-                    }
-                } catch (final Exception ignore) {
-                }
-
-                for (final CharSequence str : lines) {
+                    cancelNotification(sbn.getPackageName(), sbn.getTag(), sbn.getId());
+                } else {
                     try {
-                        final Attack attack = new Attack(str.toString());
-
-                        // if we actually have attack already we jump out
-                        if (queue.contains(attack)) break;
-
-                        queue.add(attack);
-                        attack.broadcast(this, notification.when);
-                        android.util.Log.d(ATTACK_INTENT, notification.when + " - " + attack.toString());
+                        Iterator<Attack> deleter = queue.iterator();
+                        for (int i = 0; i < lines.length; ++i) {
+                            deleter.next();
+                        }
+                        while (deleter.hasNext()) {
+                            deleter.remove();
+                            deleter.next();
+                        }
                     } catch (final Exception ignore) {
+                    }
+
+                    for (final CharSequence str : lines) {
+                        try {
+                            final Attack attack = new Attack(str.toString());
+
+                            // if we actually have attack already we jump out
+                            if (queue.contains(attack)) break;
+
+                            queue.add(attack);
+                            attack.broadcast(this, notification.when);
+                            android.util.Log.d(ATTACK_INTENT, notification.when + " - " + attack.toString());
+                        } catch (final Exception ignore) {
+                        }
                     }
                 }
             }
