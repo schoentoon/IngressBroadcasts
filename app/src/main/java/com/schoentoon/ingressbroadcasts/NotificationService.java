@@ -39,7 +39,7 @@ public class NotificationService extends NotificationListenerService {
         final String user;
         final String portal;
         public Attack(final String raw) throws Exception {
-            int space = raw.indexOf(' ');
+            final int space = raw.indexOf(' ');
             if (space == -1) throw new Exception("Not an attack?");
 
             user = raw.substring(0, space);
@@ -104,10 +104,10 @@ public class NotificationService extends NotificationListenerService {
                     cancelNotification(sbn.getPackageName(), sbn.getTag(), sbn.getId());
                 } else {
                     try {
-                        Iterator<Attack> deleter = queue.iterator();
-                        for (int i = 0; i < lines.length; ++i) {
-                            deleter.next();
-                        }
+                        final Iterator<Attack> deleter = queue.iterator();
+
+                        for (int i = 0; i < lines.length; ++i) deleter.next();
+
                         while (deleter.hasNext()) {
                             deleter.remove();
                             deleter.next();
@@ -142,7 +142,7 @@ public class NotificationService extends NotificationListenerService {
             final Intent intent = new Intent(NEUTRALIZED_INTENT);
             final String raw = extras.getString(Notification.EXTRA_TEXT);
 
-            int space = raw.indexOf(' ');
+            final int space = raw.indexOf(' ');
             if (space == -1) return;
 
             final String user = raw.substring(0, space);
