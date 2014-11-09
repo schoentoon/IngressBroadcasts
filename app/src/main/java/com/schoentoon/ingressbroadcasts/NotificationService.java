@@ -3,6 +3,7 @@ package com.schoentoon.ingressbroadcasts;
 import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
@@ -101,7 +102,8 @@ public class NotificationService extends NotificationListenerService {
                         } catch (final Exception ignore) {
                         }
                     }
-                    cancelNotification(sbn.getPackageName(), sbn.getTag(), sbn.getId());
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) cancelNotification(sbn.getKey());
+                    else cancelNotification(sbn.getPackageName(), sbn.getTag(), sbn.getId());
                 } else {
                     try {
                         final Iterator<Attack> deleter = queue.iterator();
