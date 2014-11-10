@@ -126,7 +126,8 @@ public class NotificationService extends NotificationListenerService {
 
                             queue.add(attack);
                             attack.broadcast(this, notification.when);
-                            android.util.Log.d(ATTACK_INTENT, notification.when + " - " + attack.toString());
+
+                            if (BuildConfig.DEBUG) android.util.Log.d(ATTACK_INTENT, notification.when + " - " + attack.toString());
                         } catch (final Exception ignore) {
                         }
                     }
@@ -138,8 +139,9 @@ public class NotificationService extends NotificationListenerService {
             intent.putExtra(TYPE, type);
             intent.putExtra(WHEN, notification.when);
             intent.putExtra(ICON, intent.getParcelableExtra(Notification.EXTRA_LARGE_ICON));
-            android.util.Log.d(ACHIEVEMENT_INTENT, notification.when + " - " + type);
             sendBroadcast(intent);
+
+            if (BuildConfig.DEBUG) android.util.Log.d(ACHIEVEMENT_INTENT, notification.when + " - " + type);
         } else if (title.endsWith(getString(R.string.neutralized))) {
             final Intent intent = new Intent(NEUTRALIZED_INTENT);
             final String raw = extras.getString(Notification.EXTRA_TEXT);
@@ -153,8 +155,9 @@ public class NotificationService extends NotificationListenerService {
             intent.putExtra(USER, user);
             intent.putExtra(PORTAL, portal);
             intent.putExtra(WHEN, notification.when);
-            android.util.Log.d(NEUTRALIZED_INTENT, notification.when + " - " + user + " - " + portal);
             sendBroadcast(intent);
+
+            if (BuildConfig.DEBUG) android.util.Log.d(NEUTRALIZED_INTENT, notification.when + " - " + user + " - " + portal);
         }
     }
 
